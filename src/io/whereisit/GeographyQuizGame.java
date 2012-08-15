@@ -28,6 +28,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 
 @SuppressWarnings("serial")
 public class GeographyQuizGame extends JPanel implements ActionListener {
@@ -142,10 +143,10 @@ public class GeographyQuizGame extends JPanel implements ActionListener {
 
 	public GeographyQuizGame(JFrame parent) {
 		try {
-			br = ImageIO.read(getResource("./src/Newworldmap.png"));
+			br = ImageIO.read(getResource("Newworldmap.png"));
 			setPreferredSize(new Dimension(br.getWidth(), br.getHeight()));
-			loadCards("./src/capitals.txt");
-			loadCountries("./src/borders.txt");
+			loadCards("capitals.txt");
+			loadCountries("borders.txt");
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 			System.exit(-1);
@@ -157,7 +158,10 @@ public class GeographyQuizGame extends JPanel implements ActionListener {
 		statusPanel.add(status);
 
 		parent.getContentPane().setLayout(new BorderLayout());
-		parent.getContentPane().add(this, BorderLayout.CENTER);
+		
+		JScrollPane scroller = new JScrollPane(this);
+		
+		parent.getContentPane().add(scroller, BorderLayout.CENTER);
 		parent.getContentPane().add(statusPanel, BorderLayout.SOUTH);
 		parent.getContentPane().add(makeButtonPanel(), BorderLayout.WEST);
 
@@ -326,14 +330,11 @@ public class GeographyQuizGame extends JPanel implements ActionListener {
 	}
 
 	private InputStream getResource(String path) throws IOException {
-		InputStream toRet = new FileInputStream(new File(path));
-		return toRet;
-		// TODO: eventually gotta fix this to do JAR resources again
-		// InputStream toRet = this.getClass().getResourceAsStream(path);
-		// if (toRet == null) {
-		// toRet = new FileInputStream(new File("Newworldmap.png"));
-		// }
-		// return toRet;
+		 InputStream toRet = this.getClass().getResourceAsStream(path);
+		 if (toRet == null) {
+		 toRet = new FileInputStream(new File(path));
+		 }
+		 return toRet;
 	}
 
 	public void loadCards(String dataFile) throws IOException {

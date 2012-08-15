@@ -1,0 +1,207 @@
+Augusta	Maine	United States	North America
+Montpelier	Vermont
+Concord	New Hampshire
+Boston	Massachusetts
+Hartford	Connecticut
+Providence	Rhode Island
+Albany	New York
+Harrisburg	Pennsylvania
+Dover	Delaware
+Trenton	New Jersey
+Annapolis	Maryland
+Richmond	Virginia
+Charleston	West Virginia
+Raleigh	North Carolina
+Columbia	South Carolina
+Atlanta	Georgia
+Montgomery	Alabama
+Jackson	Mississippi
+Baton Rouge	Louisiana
+Little Rock	Arkansas
+Nashville	Tennessee
+Frankfort	Kentucky
+Talahassee	Florida
+Columbus	Ohio
+Indianapolis	Indiana
+Springfield	Illinois
+Lansing	Michigan
+Madison	Wisconson
+St. Paul	Minnesota
+Oklahoma City	Oklahoma
+Topeka	Kansas
+Jefferson City	Missouri
+Des Moines	Iowa
+Lincoln	Nebraska
+Pierre	South Dakota
+Bismarck	North Dakota
+Cheyenne	Wyoming
+Helena	Montana
+Boise	Idaho
+Austin	Texas
+Santa Fe	New Mexico
+Phoenix	Arizona
+Denver	Colorado
+Salt Lake City	Utah
+Carson City	Nevada
+Sacramento	California
+Salem	Oregon
+Olympia	Washington
+Juneau	Alaska
+Honolulu	Hawaii
+Victoria	British Columbia	Canada	North America
+Edmonton	Alberta
+Regina	Saskatchewan
+Winnipeg	Manitoba
+Toronto	Ontario
+Quebec	Quebec
+St John's	Newfoundland
+Fredericton	New Brunswick
+Charlottetown	Prince Edward Island
+Halifax	Nova Scotia
+Whitehorse	Yukon Territory
+Yellowknife	Northwest Territories
+Iqaluit	Nunavut
+Ottawa	Canada
+Mexico City	Mexico	Central America	North America
+Belmopan	Belize
+Guatemala City	Guatemala
+San Salvador	El Salvador
+Tegucigalpa	Honduras
+Managua	Nicaragua
+San jose	Costa Rica
+Panama City	Panama
+Havana	Cuba	The Carribean	North America
+Kingston	Jamaica
+Port-au-Prince	Haiti
+Santo Domingo	Dominican Republic
+San Juan	Puerto Rico
+Port of Spain	Trinidad and Tobago	
+Nassau	Bahamas
+Bogota	Colombia	South America
+Quito	Ecuador
+Caracas	Venezuela
+Georgetown	Guyana
+Paramaribo	Suriname
+Cayenne	French Guiana
+Lima	Peru
+La Paz	Bolivia
+Brasilia	Brazil
+Santiago	Chile
+Buenos aires	Argentina
+Montevideo	Uruguay
+Asuncion	Paraguay
+Oslo	Norway	Scandanavia and Finland	Europe
+Stockholm	Sweden
+Helsinki	Finland
+Copenhagen	Denmark
+Dublin	Ireland	British Isles	Europe
+London	United Kingdom
+Lisbon	Portugal	Europe
+Madrid	Spain
+Monte Carlo	Monaco
+Paris	France
+Berlin	Germany
+Bern	Switzerland
+Rome	Italy
+Vaduz	Liechtenstein
+Vienna	Austria
+Valletta	Malta
+Vatican City	Vatican Republic
+San Marino	San Marino
+Bucharest	Romania
+Sofia	Bulgaria
+Athens	Greece
+Moscow	Russian Federation
+Kiev	Ukraine
+Tbilisi	Georgia
+Baku	Azerbaijan
+Yerevan	Armenia
+Ohisinau	Moldova
+Warsaw	Poland	Central Europe	Europe
+Prague	Czech Republic
+Bratislava	Slovakia
+Budapest	Hungary
+Luxembourg	Luxembourg	Low Countries	Europe
+Brussels	Belgium
+Amsterdam	Netherlands
+Ljubljana	Slovenia	Western Balkans	Europe
+Zagreb	Croatia
+Sarajevo	Bosnia and Herzegovina
+Podgorica	Montenegro
+Tirana	Albania
+Belgrade	Serbia
+Skopje	The Former Yugoslav Republic of Macedonia
+Tallinn	Estonia	Baltic States	Europe
+Riga	Latvia
+Vilnius	Lithuania
+Kaliningrad	Russian Federation
+Minsk	Belarus
+El Aaiun	Western Sahara	Northwest Africa	Africa
+Rabat	Morocco
+Algiers	Algeria
+Tunis	Tunisia
+Tripoli	Libya
+Cairo	Egypt	Northeast Africa	Africa
+Asmara	Eritrea
+Djibouti	Djibouti
+Khartoum	Sudan
+Addis Ababa	Ethiopia
+Mogadishu	Somalia
+Nouakchott	Mauritania	West Africa	Africa
+Dakar	Senegal
+Banjul	Gambia
+Bissau	Guinea-bissau
+Bamako	Mali
+Conakry	Guinea
+Freetown	Sierra Leone
+Monrovia	Liberia
+Niamey	Niger
+Abuja	Nigeria
+Porto-novo	Benin
+Lome	Togo
+Accra	Ghana
+Ouagadougou	Burkina Faso
+Yamoussoukro	Côte D'Ivoire
+N'Djamena	Chad	Central Africa	Africa
+Bangui	Central African Republic
+Kinshasa	Zaire
+Brazzaville	Congo
+Libreville	Gabon
+Sao Tome	Sao Tome and Principe
+Malabo	Equatorial Guinea
+Yaounde	Cameroon
+Kampala	Uganda	Central East Africa	Africa
+Nairobi	Kenya
+Kigali	Rwanda
+Bujumbura	Burundi
+Dodoma	Tanzania
+Lilongwe	Malawi
+Lusaka	Zambia
+Luanda	Angola	Southern Africa	Africa
+Windhoek	Namibia
+Gaborone	Botswana
+Harare	Zimbabwe
+Maptuo	Mozambique
+Mbabane	Swaziland
+Maseru	Lesotho
+Pretoria	South Africa
+Antananarivo	Madagascar
+Port Louis	Mauritius
+Ankara	Turkey	Middle East
+Nicosia	Cyprus
+Beirut	Lebanon
+Damascus	Syria
+Jerusalem	Israel
+Amman	Jordan
+Baghdad	Iraq
+Ar Riyad	Saudi Arabia
+San'a	Yemen
+Masqat	Oman
+Tehran	Iran
+Al Kuwayt	Kuwait
+Abu Dhabi	United Arab Emirates
+Ad Dawhah	Qatar
+Al Manamah	Bahrain
+Ashgabat	Turkmenistan
+Kabul	Afghanistan
+Islamabad	Pakistan
