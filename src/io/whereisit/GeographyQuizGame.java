@@ -3,6 +3,7 @@ package io.whereisit;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -49,6 +50,7 @@ public class GeographyQuizGame extends JPanel implements ActionListener {
 
 	public class Stack {
 		public String label;
+		public boolean highLevel;
 		public Vector<Card> cards = new Vector<Card>();
 
 		@Override
@@ -350,7 +352,7 @@ public class GeographyQuizGame extends JPanel implements ActionListener {
 			if (arr.length > 2) {
 				System.out.println("new attributes");
 				curStacks.removeAllElements();
-				for (int i = 2; i < arr.length; i++) {
+				for (int i = arr.length - 1; i > 1; i--) {
 					Stack s = new Stack();
 					System.out.println("label " + arr[i]);
 					s.label = arr[i];
@@ -360,6 +362,11 @@ public class GeographyQuizGame extends JPanel implements ActionListener {
 						curStacks.add(stacks.get(stacks.indexOf(s)));
 					} else {
 						System.out.println("it's new");
+						if (i > 2) {
+							s.highLevel = true;
+						} else {
+							s.highLevel = false;
+						}
 						s.cards.add(c);
 						stacks.add(s);
 						curStacks.add(s);
@@ -394,6 +401,10 @@ public class GeographyQuizGame extends JPanel implements ActionListener {
 		checkBoxPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 		for (int i = 0; i < checkBoxes.length; i++) {
 			checkBoxes[i] = new JCheckBox(stacks.get(i).label);
+			if (stacks.get(i).highLevel) { 
+				Font newLabelFont=new Font(checkBoxes[i].getFont().getName(),Font.BOLD,checkBoxes[i].getFont().getSize()+1); 
+				checkBoxes[i].setFont(newLabelFont);
+			}
 			prevCheckStatus[i] = false;
 			checkBoxPanel.add(checkBoxes[i]);
 		}

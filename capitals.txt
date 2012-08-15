@@ -161,7 +161,7 @@ Porto-novo	Benin
 Lome	Togo
 Accra	Ghana
 Ouagadougou	Burkina Faso
-Yamoussoukro	CÙte D'Ivoire
+Yamoussoukro	Côte D'Ivoire
 N'Djamena	Chad	Central Africa	Africa
 Bangui	Central African Republic
 Kinshasa	Zaire
@@ -205,3 +205,55 @@ Al Manamah	Bahrain
 Ashgabat	Turkmenistan
 Kabul	Afghanistan
 Islamabad	Pakistan
+Abu Dhabi	United Arab Emirates	West and Southwest Asia	Asia
+Amman	Jordan
+Ankara	Turkey
+Baghdad	Iraq
+Baku	Azerbaijan
+Beirut	Lebanon
+Damascus	Syria
+Doha	Qatar
+Episkopi	Akrotiri and Dhekelia
+Jerusalem	 Israel
+Kabul	Afghanistan
+Kuwait City	Kuwait
+Manama	Bahrain
+Muscat	Oman
+Nicosia	Cyprus
+Ramallah	Palestine
+Riyadh	Saudi Arabia
+Sana'a	Yemen
+Tbilisi	Georgia
+Tehran	Iran
+Jerusalem	Israel
+Yerevan	Armenia
+Ashgabat	Turkmenistan	Central Asia	Asia
+Astana	Kazakhstan
+Bishkek	Kyrgyzstan
+Dushanbe	Tajikistan
+Tashkent	Uzbekistan
+Beijing	China	East Asia	Asia
+Pyongyang	North Korea
+Seoul	South Korea
+Tokyo	Japan
+Taipei	Taiwan
+Ulaanbaatar	Mongolia
+Dhaka	Bangladesh	South Asia	Asia
+Islamabad	Pakistan
+Kathmandu	Nepal
+Kotte	Sri Lanka
+Malé	Maldives
+New Delhi	India
+Thimphu	Bhutan
+Bandar Seri Begawan	Brunei	Southeast Asia	Asia
+Bangkok	Thailand
+Dili	East Timor
+Hanoi	Vietnam
+Jakarta	Indonesia
+Kuala Lumpur	 Malaysia
+Manila	Philippines
+Naypyidaw	Burma
+Phnom Penh	Cambodia
+Port Moresby	Papua New Guinea
+Singapore	Singapore
+Vientiane	Laos
