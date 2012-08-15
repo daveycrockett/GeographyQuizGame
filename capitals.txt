@@ -164,8 +164,8 @@ Ouagadougou	Burkina Faso
 Yamoussoukro	C™te D'Ivoire
 N'Djamena	Chad	Central Africa	Africa
 Bangui	Central African Republic
-Kinshasa	Zaire
-Brazzaville	Congo
+Kinshasa	Congo	
+Brazzaville	Democratic Republic of Congo
 Libreville	Gabon
 Sao Tome	Sao Tome and Principe
 Malabo	Equatorial Guinea
