@@ -12,8 +12,9 @@
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
         <javaElement handleIdentifier="=GeographyQuizGame/src"/>
-        <file path="/GeographyQuizGame/Newworldmap.png"/>
-        <file path="/GeographyQuizGame/borders.txt"/>
-        <file path="/GeographyQuizGame/capitals.txt"/>
+        <file path="/GeographyQuizGame/worldmap.png"/>
+        <file path="/GeographyQuizGame/world_borders.txt"/>
+        <file path="/GeographyQuizGame/countries_and_capitals.txt"/>
+        <file path="/GeographyQuizGame/regions.txt"/>
     </selectedElements>
 </jardesc>
