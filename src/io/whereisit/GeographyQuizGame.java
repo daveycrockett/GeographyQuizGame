@@ -29,15 +29,29 @@ import javax.swing.JScrollPane;
 @SuppressWarnings("serial")
 public class GeographyQuizGame extends JPanel implements ActionListener {
     private WorldModel model;
-    private double SCALE_FACTOR = .5;
-    private double MAP_TO_POINT_SCALE = .5;
+    private double SCALE_FACTOR;
+    private double MIN_ZOOM;
+    
+    /** The difference in scale (precision) between points in the borders
+     * file and points on the map image.  This can be caused by labeling countries
+     * and a high-resolution map which is then scaled down for size reasons.  In the
+     * case of the existing world_borders.txt and worldmap.png, the borders were 
+     * labeled on an image with dimensions twice as large as the final, displayed map.
+     */
+    private double MAP_TO_BORDER_SCALE = .5;
+    private double EXTENT_THRESHOLD = 300;
+    private Dimension preferredSize;
+    int minWindowX, minWindowY, maxWindowX, maxWindowY;
+    int panToMinWindowX, panToMinWindowY, panToMaxWindowX, panToMaxWindowY;
+    private boolean panning = false;
+    private int frames;
     
     private Country mouseOverCountry;
     BufferedImage br = null;
     private final JLabel status;
     JCheckBox[] checkBoxes;
     boolean[] prevCheckStatus;
-    JButton nextButton, flipButton;
+    JButton nextButton, flipButton, zoomButton;
     JRadioButton fronts, backs, both, neither, random;
     boolean front = false;
     private JFrame frame;
@@ -84,23 +98,48 @@ public class GeographyQuizGame extends JPanel implements ActionListener {
 
     @Override
     protected void paintComponent(Graphics g) {
-        g.drawImage(br, 0, 0, (int)(br.getWidth() * SCALE_FACTOR), (int)(br.getHeight() * SCALE_FACTOR), null);
-        if (model.getCurrentCountry() != null) {
-            g.setColor(Color.red);
-            for (Vector<Point> border: model.getCurrentCountry().getBorders()) {
-                for (Point pi : border) {
-                    g.fillRect((int) (pi.getX() * SCALE_FACTOR * MAP_TO_POINT_SCALE), (int) (pi.getY() * SCALE_FACTOR * MAP_TO_POINT_SCALE), 1, 1);
+        g.drawImage(br, 0, 0, preferredSize.width, preferredSize.height, minWindowX, minWindowY, maxWindowX, maxWindowY, Color.white, null);
+        if (!panning) {
+            if (model.getCurrentCountry() != null) {
+                g.setColor(Color.red);
+                for (Vector<Point> border: model.getCurrentCountry().getBorders()) {
+                    for (Point pi : border) {
+                        double xPrime = ((pi.getX() * MAP_TO_BORDER_SCALE) - minWindowX) * SCALE_FACTOR;
+                        double yPrime = ((pi.getY() * MAP_TO_BORDER_SCALE) - minWindowY) * SCALE_FACTOR;
+                        g.fillRect((int) xPrime, (int) yPrime, 1, 1);
+                    }
                 }
             }
-        }
-        if (mouseOverCountry != null) {
-            g.setColor(Color.blue);
-            for (Vector<Point> border: mouseOverCountry.getBorders()) {
-                for (Point pi : border) {
-                    g.fillRect((int) (pi.getX() * SCALE_FACTOR * MAP_TO_POINT_SCALE), (int) (pi.getY() * SCALE_FACTOR * MAP_TO_POINT_SCALE), 1, 1);
+            if (mouseOverCountry != null) {
+                g.setColor(Color.blue);
+                for (Vector<Point> border: mouseOverCountry.getBorders()) {
+                    for (Point pi : border) {
+                        double xPrime = ((pi.getX() * MAP_TO_BORDER_SCALE) - minWindowX) * SCALE_FACTOR;
+                        double yPrime = ((pi.getY() * MAP_TO_BORDER_SCALE) - minWindowY) * SCALE_FACTOR;
+                        g.fillRect((int) xPrime, (int) yPrime, 1, 1);
+                    }
                 }
             }
+        } else {
+            frames--;
+            if (frames == 0) {
+                minWindowX = panToMinWindowX;
+                minWindowY = panToMinWindowY;
+                maxWindowX = panToMaxWindowX;
+                maxWindowY = panToMaxWindowY;
+                panning = false;
+            } else {
+                minWindowX = interpolate(minWindowX, panToMinWindowX, frames);
+                maxWindowX = interpolate(maxWindowX, panToMaxWindowX, frames);
+                minWindowY = interpolate(minWindowY, panToMinWindowY, frames);
+                maxWindowY = interpolate(maxWindowY, panToMaxWindowY, frames);
+            }
+            repaint();
         }
+    }
+    
+    private int interpolate(int start, int end, int frames) {
+        return (int)(((end - start) / (double)frames) + start);
     }
 
     public GeographyQuizGame(JFrame parent) {
@@ -120,9 +159,14 @@ public class GeographyQuizGame extends JPanel implements ActionListener {
 
         parent.getContentPane().setLayout(new BorderLayout());
         
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        SCALE_FACTOR = Math.max((screenSize.width * 0.8) / (double)br.getWidth(), (screenSize.height * 0.9) / (double)br.getHeight());
-        setPreferredSize(new Dimension((int)(br.getWidth() * SCALE_FACTOR), (int)(br.getHeight() * SCALE_FACTOR)));
+        preferredSize = Toolkit.getDefaultToolkit().getScreenSize();
+        preferredSize = new Dimension((int)(preferredSize.width * 0.8), (int)(preferredSize.height * 0.9));
+        MIN_ZOOM = SCALE_FACTOR = Math.max(preferredSize.width / (double)br.getWidth(), preferredSize.height / (double)br.getHeight());
+        preferredSize = new Dimension((int)(br.getWidth() * SCALE_FACTOR), (int)(br.getHeight() * SCALE_FACTOR));
+        setPreferredSize(preferredSize);
+        minWindowX = minWindowY = 0;
+        maxWindowX = br.getWidth();
+        maxWindowY = br.getHeight();
         JScrollPane scroller = new JScrollPane(this);
         frame.getContentPane().add(scroller, BorderLayout.CENTER);
         frame.getContentPane().add(statusPanel, BorderLayout.SOUTH);
@@ -131,7 +175,6 @@ public class GeographyQuizGame extends JPanel implements ActionListener {
         frame.pack();
         frame.setVisible(true);
 
-        System.out.println("SCALE_FACTOR = " + SCALE_FACTOR);
         addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseMoved(MouseEvent me) {
                 int x = (int) me.getPoint().getX();
@@ -173,6 +216,36 @@ public class GeographyQuizGame extends JPanel implements ActionListener {
                 return;
             } else {
                 model.nextQuestion();
+                mouseOverCountry = null;
+                if (model.getCurrentCountry().getExtent() < EXTENT_THRESHOLD) {
+                    int centerX = (int)(model.getCurrentCountry().getCenter().getX() * MAP_TO_BORDER_SCALE);
+                    int centerY = (int)(model.getCurrentCountry().getCenter().getY() * MAP_TO_BORDER_SCALE);
+                    SCALE_FACTOR = MIN_ZOOM * 2;
+                    double sourceWidth = preferredSize.width / SCALE_FACTOR;
+                    double sourceHeight = preferredSize.height / SCALE_FACTOR;
+                    panToMinWindowX = (int) Math.max(centerX - (sourceWidth / 2), 0);
+                    if (panToMinWindowX == 0) {
+                        panToMaxWindowX = (int)sourceWidth;
+                    } else {
+                        panToMaxWindowX = (int) Math.min(centerX + (sourceWidth / 2), br.getWidth());
+                        panToMinWindowX = panToMaxWindowX - (int)sourceWidth;
+                    }
+                    
+                    panToMinWindowY = (int) Math.max(centerY - (sourceHeight / 2), 0);
+                    if (panToMinWindowY == 0) {
+                        panToMaxWindowY = (int)sourceHeight;
+                    } else {
+                        panToMaxWindowY = (int) Math.min(centerY + (sourceHeight / 2), br.getHeight());
+                        panToMinWindowY = panToMaxWindowY - (int)sourceHeight;
+                    }
+                } else {
+                    panToMinWindowX = panToMinWindowY = 0;
+                    panToMaxWindowX = br.getWidth();
+                    panToMaxWindowY = br.getHeight();
+                    SCALE_FACTOR = MIN_ZOOM;
+                }
+                panning = true;
+                frames = 20;
                 repaint();
                 if (random.isSelected()) {
                     if (Math.random() < .5) {
@@ -183,6 +256,14 @@ public class GeographyQuizGame extends JPanel implements ActionListener {
                 }
             }
             reformatStatusBar();
+        } else if (ae.getSource() == zoomButton) {
+            panToMinWindowX = panToMinWindowY = 0;
+            panToMaxWindowX = br.getWidth();
+            panToMaxWindowY = br.getHeight();
+            SCALE_FACTOR = MIN_ZOOM;
+            panning = true;
+            frames = 20;
+            repaint();
         } else {
             if (fronts.isSelected()) {
                 front = true;
@@ -203,7 +284,7 @@ public class GeographyQuizGame extends JPanel implements ActionListener {
     }
 
     public void checkMouseOverCountry(int x, int y) {
-        mouseOverCountry = model.findCountry((int)((x / SCALE_FACTOR) / MAP_TO_POINT_SCALE), (int)((y / SCALE_FACTOR) / MAP_TO_POINT_SCALE));
+        mouseOverCountry = model.findCountry((int)(((x / SCALE_FACTOR) + minWindowX) / MAP_TO_BORDER_SCALE), (int)(((y / SCALE_FACTOR) + minWindowY) / MAP_TO_BORDER_SCALE));
         if (mouseOverCountry != null) {
             reformatStatusBar();
             repaint();
@@ -215,13 +296,16 @@ public class GeographyQuizGame extends JPanel implements ActionListener {
         checkBoxPanel.setLayout(new BoxLayout(checkBoxPanel, BoxLayout.Y_AXIS));
 
         nextButton = new JButton("next");
-
         flipButton = new JButton("flip");
+        zoomButton = new JButton("zoom");
         nextButton.addActionListener(this);
         flipButton.addActionListener(this);
+        zoomButton.addActionListener(this);
         checkBoxPanel.add(nextButton);
         checkBoxPanel.add(Box.createRigidArea(new Dimension(0, 4)));
         checkBoxPanel.add(flipButton);
+        checkBoxPanel.add(Box.createRigidArea(new Dimension(0, 4)));
+        checkBoxPanel.add(zoomButton);
         Set<String> stacks = model.getRegions();
         checkBoxes = new JCheckBox[stacks.size()];
         prevCheckStatus = new boolean[stacks.size()];
