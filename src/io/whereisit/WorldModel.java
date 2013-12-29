@@ -7,7 +7,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.Vector;
@@ -15,17 +18,90 @@ import java.util.Vector;
 import javax.imageio.ImageIO;
 
 public class WorldModel {
-    
+
     private Hashtable<String, Country> countryLookup = new Hashtable<String, Country>();
     private Hashtable<String, Vector<Country>> regionLookup = new Hashtable<String, Vector<Country>>();
     private BufferedImage map;
-    private Vector<Country> quizStack = null;
+    private Set<Country> quizStack = new HashSet<Country>();
+    private ArrayList<String> quizRegions = new ArrayList<String>();
     private Country currentCountry = null;
-    
+    private Country mouseOverCountry;
+    private CardStatus cardStatus;
+
+    Random random = new Random(System.currentTimeMillis());
+
+    public void setCardStatus(CardStatus cardStatus) {
+        this.cardStatus = cardStatus;
+    }
+
+    boolean front = false;
+
+    public Country getMouseOverCountry() {
+        return mouseOverCountry;
+    }
+
+    public void setMouseOverCountry(Country mouseOverCountry) {
+        this.mouseOverCountry = mouseOverCountry;
+    }
+
+    public enum CardStatus {
+        FRONT,
+        BACK,
+        BOTH,
+        NEITHER,
+        RANDOM
+    }
+
+    public String getCurrentCardsDisplay() {
+        if (getCurrentCountry() == null && mouseOverCountry == null) {
+            return "";
+        }
+        String status = "";
+        if (mouseOverCountry != null) {
+            status += "In Blue: " + mouseOverCountry.getName() + "     ";
+        }
+        if (getCurrentCountry() != null) {
+            String cardFront = getCurrentCountry().getCapitals().get(0);
+            String cardBack = getCurrentCountry().getName();
+            status += "Quiz ";
+            String keyString = "";
+            if (getCurrentCountry() != null) {
+                keyString = " (in red)";
+            } else {
+                keyString = " (no border shown)";
+            }
+            if (cardStatus == CardStatus.NEITHER) {
+                if (getCurrentCountry() == null) {
+                    if (front) {
+                        status += "Capital: " + cardFront;
+                    } else {
+                        status += "Province: " + cardBack;
+                    }
+                } else {
+                    status += "Country" + keyString + ": ?";
+                }
+            } else if (cardStatus == CardStatus.BOTH) {
+                status += "Region" + keyString + ": " + cardFront
+                        + ", " + cardBack;
+            } else {
+                boolean front = (cardStatus == CardStatus.FRONT);
+                if (cardStatus == CardStatus.RANDOM) {
+                    front = random.nextBoolean();
+                }
+                if (front) {
+                    status += "Capital City" + keyString + ": " + cardFront;
+                } else {
+                    status += "Region " + keyString + ": " + cardBack;
+                }
+            }
+        }
+        return status;
+    }
+
     public BufferedImage getMap() {
         return map;
     }
-    
+
     public Set<String> getRegions() {
         return regionLookup.keySet();
     }
@@ -37,9 +113,9 @@ public class WorldModel {
         optimizeBorders();
         map = ImageIO.read(getResource("worldmap.png"));
     }
-    
+
     private void loadCountriesAndCapitals() throws IOException {
-        Scanner countries = new Scanner(getResource("countries_and_capitals.txt"));
+        Scanner countries = new Scanner(getResource("countries_and_capitals.txt"), "UTF8");
         String previousCountryName = null;
         while (countries.hasNextLine()) {
             String[] tokens = countries.nextLine().split("\t");
@@ -53,9 +129,9 @@ public class WorldModel {
             }
         }
     }
-    
+
     private void loadRegions() throws IOException {
-        Scanner regions = new Scanner(getResource("regions.txt"));
+        Scanner regions = new Scanner(getResource("regions.txt"), "UTF8");
         String previousRegion = null;
         while (regions.hasNextLine()) {
             String line = regions.nextLine().trim();
@@ -69,9 +145,9 @@ public class WorldModel {
             }
         }
     }
-    
+
     private void loadBorders() throws IOException {
-        Scanner borders = new Scanner(getResource("world_borders.txt"));
+        Scanner borders = new Scanner(getResource("world_borders.txt"), "UTF8");
         while (borders.hasNextLine()) {
             String line = borders.nextLine().trim();
             if (line.equals("")) {
@@ -91,7 +167,7 @@ public class WorldModel {
             }
         }
     }
-    
+
     private void optimizeBorders() {
         for (Country c: countryLookup.values()) {
             int numPoints = 0;
@@ -120,7 +196,7 @@ public class WorldModel {
             c.setExtent(Math.max((maxx - minx),(maxy-miny)));
         }
     }
-    
+
     public Country findCountry(int x, int y) {
         for (Country c : countryLookup.values()) {
             int cx = (int) c.getCenter().getX();
@@ -149,34 +225,27 @@ public class WorldModel {
         }
         return null;
     }
-    
-    public void setQuizRegions(Vector<String> regions) {
-        Vector<Country> quizStack = new Vector<Country>();
-        for (String region: regions) {
-            for (Country country: regionLookup.get(region)) {
-                if (quizStack.size() == 0) {
-                    quizStack.add(country);
-                } else {
-                    quizStack.insertElementAt(country, (int)(Math.random() * quizStack.size() + 1));
-                }
-            }
-        }
-        this.quizStack = quizStack;
-    }
-    
+
     public Country getCurrentCountry() {
         return currentCountry;
     }
-    
-    public Vector<Country> getQuizStack() {
-        return quizStack;
+
+    public void nextQuestion() throws IllegalQuizStateException {
+        if (quizStack.size() == 0) {
+            if (quizRegions.size() == 0) {
+                throw new IllegalQuizStateException();
+            } else {
+                for (String region: quizRegions) {
+                    addToQuizStack(region);
+                }
+            }
+        }
+
+        int index = random.nextInt(quizStack.size());
+        currentCountry = quizStack.toArray(new Country[0])[index];
+        quizStack.remove(currentCountry);
     }
-    
-    public void nextQuestion() {
-        int index = (int)(Math.random() * this.quizStack.size());
-        this.currentCountry = quizStack.remove(index);
-    }
-    
+
     private InputStream getResource(String path) throws IOException {
         URL resource = this.getClass().getClassLoader().getResource(path);
         if (resource != null) {
@@ -185,5 +254,29 @@ public class WorldModel {
             return new FileInputStream(new File(path));
         }
     }
-    
+
+    public void addRegion(String region) {
+        if (!quizRegions.contains(region) && regionLookup.containsKey(region)) {
+            quizRegions.add(region);
+            addToQuizStack(region);
+        }
+    }
+
+    private void addToQuizStack(String region) {
+        for (Country c: regionLookup.get(region)) {
+            quizStack.add(c);
+        }
+    }
+
+    public void removeRegion(String region) {
+        if (quizRegions.contains(region)) {
+            quizRegions.remove(region);
+            if (regionLookup.containsKey(region)) {
+                for (Country c: regionLookup.get(region)) {
+                    quizStack.remove(c);
+                }
+            }
+        }
+    }
+
 }

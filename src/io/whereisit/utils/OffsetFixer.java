@@ -10,9 +10,10 @@ public class OffsetFixer {
 
     public static void main(String[] argv) {
         int OFFSET = -446;
+        PrintWriter pr = null;
         try {
             Scanner scan = new Scanner(new File("countries_tofix.txt"));
-            PrintWriter pr = new PrintWriter(new FileWriter("countries_fixed.txt"));
+            pr = new PrintWriter(new FileWriter("countries_fixed.txt"));
             while (scan.hasNextLine()) {
                 String country = scan.nextLine();
                 if (scan.hasNextLine()) {
@@ -29,6 +30,10 @@ public class OffsetFixer {
             }
         } catch (IOException ioe) {
             ioe.printStackTrace();
+        } finally {
+            if (pr != null) {
+                pr.close();
+            }
         }
     }
 }

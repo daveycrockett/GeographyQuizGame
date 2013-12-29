@@ -11,7 +11,7 @@ public class Country {
     private Vector<Vector<Point>> borders;
     private Point center;
     private double extent;
-    
+
     public String getName() {
         return name;
     }
@@ -23,7 +23,7 @@ public class Country {
     public Vector<Vector<Point>> getBorders() {
         return borders;
     }
-    
+
     public String getRegion() {
         return region;
     }
@@ -31,7 +31,7 @@ public class Country {
     public void setRegion(String region) {
         this.region = region;
     }
-    
+
     public Point getCenter() {
         return center;
     }
@@ -47,7 +47,7 @@ public class Country {
     public void setExtent(double extent) {
         this.extent = extent;
     }
-    
+
     public void addCapital(String capital) {
         capitals.add(capital);
     }
@@ -55,22 +55,28 @@ public class Country {
     public void addBorder(Vector<Point> border) {
         borders.add(border);
     }
-    
+
     public Country() {
         capitals = new Vector<String>();
         borders = new Vector<Vector<Point>>();
     }
-    
+
     public Country(String name) {
         this();
         this.name = name;
     }
-    
-    public Country(String name, String region) {
-        this(name);
-        this.region = region;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Country) {
+            return name.equals(((Country)o).getName());
+        }
+        return false;
     }
-    
-    
-    
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
+
 }
