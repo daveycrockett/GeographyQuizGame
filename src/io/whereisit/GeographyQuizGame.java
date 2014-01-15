@@ -15,8 +15,10 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Vector;
 
+import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -237,10 +239,19 @@ public class GeographyQuizGame extends JPanel implements ActionListener {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
 
-        nextButton = new JButton("next");
-        flipButton = new JButton("flip");
-        zoomButton = new JButton("zoom");
-        optionsButton = new JButton("options");
+        try {
+        nextButton = new JButton(new ImageIcon(ImageIO.read(WorldModel.getResource("next.png"))));
+        nextButton.setToolTipText("next");
+        flipButton = new JButton(new ImageIcon(ImageIO.read(WorldModel.getResource("flip.png"))));
+        flipButton.setToolTipText("flip");
+        zoomButton = new JButton(new ImageIcon(ImageIO.read(WorldModel.getResource("zoom.png"))));
+        zoomButton.setToolTipText("zoom");
+        optionsButton = new JButton(new ImageIcon(ImageIO.read(WorldModel.getResource("options.png"))));
+        optionsButton.setToolTipText("options");
+        } catch (IOException ioe) {
+            System.err.println("Couldn't read resources!");
+            System.exit(-1);
+        }
         nextButton.addActionListener(this);
         flipButton.addActionListener(this);
         zoomButton.addActionListener(this);

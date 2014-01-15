@@ -246,8 +246,8 @@ public class WorldModel {
         quizStack.remove(currentCountry);
     }
 
-    private InputStream getResource(String path) throws IOException {
-        URL resource = this.getClass().getClassLoader().getResource(path);
+    public static InputStream getResource(String path) throws IOException {
+        URL resource = WorldModel.class.getClassLoader().getResource(path);
         if (resource != null) {
             return resource.openStream();
         } else {
